@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<!--
+ WebPiano: Piano sound synthesis based on "Physics-Based Sound Synthesis of the Piano" (Balázs Bank)
+
+ 	Copyright (C) 2020 Juergen Wothke
+
+-->
+<meta http-equiv="X-UA-Compatible" content="chrome=1" />
+<title>WebPiano</title>
+
+<meta property="og:image" content="https://www.wothke.ch/webPiano/screenshot.gif" />
+<meta property="og:url" content="https://www.wothke.ch/webPiano/" />
+<meta property="og:type" content="just for fun" />
+<meta property="og:title" content="WebPiano" />
+<meta property="og:description" content="WebPiano lets you create piano sounds directly in the browser." />
+
+<meta name="description" content="WebPiano lets you create piano sounds directly in the browser.">
+<meta name="author" content="Juergen Wothke">
+<meta name="keywords" content="WebPiano, Web Audio API, HTML5, JavaScript, piano, synthesis, digital waveguide">
+<link rel="image_src" href="screenshot.gif" />
+
+
+<link href="stdlib/font.css" rel="stylesheet" type="text/css">
+<link href="stdlib/common.css" rel="stylesheet" type="text/css">
+
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+<link type="image/x-icon" href="favicon.ico" />
+
+<script type="text/javascript" src="stdlib/jquery1.7.2.min.js"></script>
+
+<script type="text/javascript" src="stdlib/3rdpartywidgets.js"></script>
+<script type="text/javascript" src="stdlib/analytics.js"></script>
+
+<script type="text/javascript" src="stdlib/scriptprocessor_player.min.js"></script>
+<script type="text/javascript" src="stdlib/tracer.js"></script>
+<script type="text/javascript" src="backend_piano.js"></script>
+
+<script type="text/javascript" src="player.js"></script>
+<script type="text/javascript" src="widgets.js"></script>
+<script type="text/javascript" src="piano.js"></script>
+</head>
+
+<body>
+	<div class="tooltip" id="tooltip" alt= "This is a hobby project, but it costs not only time to regularily maintain this site but also money to pay for the internet service provider (etc). If you want to keep this site up and running.. or if you just like my work (see https://jwothke.wordpress.com/) and you'd like to see more of it in the future, please make a contribution. Thank you!"></div>
+	<div>
+		<div class="bg"><img src="webpiano.png"></img></div>
+
+		<div class="piano"></div>
+		<div class="keys"><div class="k">a</div><div class="k">s</div><div class="k">d</div><div class="k">f</div><div class="k">g</div><div class="k">h</div><div class="k">j</div><div class="k">A</div><div class="k">S</div><div class="k">D</div><div class="k">F</div><div class="k">G</div><div class="k">H</div><div class="k">J</div></div>
+
+		<div id="sidVoice1" class="scope" ><canvas id="voice1Canvas"></canvas></div>
+		<div class="musicBoxTab"></div>
+
+		<div style="position:relative;top:60px">
+			<div>
+				<div class="soundboardTab"></div>
+				<div style="height:1em;"></div>
+				<p></p>
+				<div class="stringsTab"></div>
+
+			</div>
+		</div>
+	</div>
+
+	<div style="position:relative;top:80px;left:10px;width:900px;">
+		<h1>WebPiano online piano synthesizer</h2> 		
+(c) 2020 Jürgen Wothke
+
+<p>This toy project is the result of my first exploration into the realm of 
+synthesized piano sounds. My goal was to get some hands-on experience with a 
+respective "digital waveguide" based design and to learn a thing or two in the process.</p>
+
+<p>The implementation is based on Balázs Bank's "Physics-Based Sound Synthesis of the Piano" 
+(see <a href="http://home.mit.bme.hu/~bank/thesis/pianomod.pdf" target="_blank">http://home.mit.bme.hu/~bank/thesis/pianomod.pdf</a>) 
+and the various papers that are cross referenced in that thesis (see respective references in the code comments).</p>
+
+<p>You can use the above knobs to turn the piano into a bell-tower (use "autoplay" so
+you can easily compare the effects). Known-Limitation: The synth core may crash with
+certain parameter combinations - when that happens just press reload.</p>
+
+<p>The source code can be found here: <a href="https://github.com/wothke/webPiano" target="_blank">https://github.com/wothke/webPiano</a></p>
+		
+	</div>
+
+
+<script>
+
+	$(function() {
+
+		// inject UI controls
+		var widgetPaypal= new WidgetPaypal();
+		var widgetUserEngagement= new WidgetUserEngagement();
+		widgetPaypal.inject();
+		widgetUserEngagement.inject();
+		
+		var widgetSoundboard= new WidgetSoundboardTreaks();	
+		widgetSoundboard.inject(".soundboardTab");
+		
+		var widgetStrings= new WidgetStringTweaks(6, 269, 65, 162, 7, 23, 4);	
+		widgetStrings.inject(".stringsTab");
+		
+		
+		
+		class Voice {
+			constructor(idx) {
+				this.idx= idx;				
+				this.frameIdx= -1;		// current time in frames within played note
+			}
+			
+			triggerNote(voice, octave, keyIdIdx, forte) {
+				if (typeof forte == 'undefined') forte = 5;
+				// new note is triggered when key is first pressed (key must be 
+				// released before a new notes can be triggered).. 
+				if (keyIdIdx == null) {	// key released
+				} else {
+					this.frameIdx= 0;
+				
+					var backend= player.getBackend();
+					backend.strikeNote(voice, octave*12+keyIdIdx, forte);
+
+					// synth does not implement any dampers.. it doesn't matter whether
+					// or not a key is released..
+				}
+				
+			}
+			setupFrame(mute) {
+				this.frameIdx++;	// unused
+			}
+		}		
+			
+		var voice0= new Voice(0);
+			// only used for "autoplay"
+		var voice1= new Voice(1);	
+		var voice2= new Voice(2);
+		
+		
+		var piano= new Piano(voice0.triggerNote.bind(voice0));			
+		piano.inject(".piano");
+
+
+		var musicBox= new MusicBox([voice0.triggerNote.bind(voice0),
+									voice1.triggerNote.bind(voice1),
+									voice2.triggerNote.bind(voice2)]);
+		musicBox.inject(".musicBoxTab");
+		
+		
+		function doNextFrame(backend) {	// called at 50Hz
+		
+			widgetSoundboard.updateBackend(backend);
+			widgetStrings.updateBackend(backend);
+		
+			var autoplay= musicBox.play();
+			
+			voice0.setupFrame(false);
+			
+			voice1.setupFrame(!autoplay);	// make voices die down..
+			voice2.setupFrame(!autoplay);
+		}			
+
+		
+		// setup piano emulator/player
+		var scopeDisplay;
+		var player= new Player(function(){ 	
+						if (typeof scopeDisplay != 'undefined') {
+							scopeDisplay.redraw();
+						}
+					}, doNextFrame);
+				
+		scopeDisplay= new ScopeDisplay(player.getTracer(), 'voice1Canvas', 412, 80);	// 1st use triggered after player is ready		
+		scopeDisplay.redraw();
+		
+		player.checkReady();
+
+	});						
+</script>
+</body>
+</html>

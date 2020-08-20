@@ -1,0 +1,438 @@
+/* general definitions for background, <details>, etc*/
+::selection {
+  color: #eee;
+  background: darkred;
+}
+body ::-webkit-scrollbar {
+  height: 16px;
+  overflow: visible;
+  width: 16px;
+}
+body ::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, .1);
+  background-clip: padding-box;
+  border: solid transparent;
+  min-height: 28px;
+  padding: 100px 0 0;
+  box-shadow: inset 1px 1px 0 rgba(0,0,0,.1),inset 0 -1px 0 rgba(0,0,0,.07);
+  border-width: 1px 1px 1px 6px;
+}
+body ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+body ::-webkit-scrollbar-button {
+  height: 0;
+  width: 0;
+}
+::-webkit-scrollbar-track {
+  background-clip: padding-box;
+  border: solid transparent;
+  border-width: 0 0 0 4px;
+}
+body ::-webkit-scrollbar-corner {
+  background: transparent;
+}
+body {
+  color: #222;
+  font-family: 'Open Sans', arial, sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  padding: 2em;
+  background: -webkit-gradient(radial, center center, 500, center center, 1400, from(rgba(0,0,0,0)), to(rgba(0,0,0,0.6))) #fff;
+  background: -moz-radial-gradient(farthest-side, rgba(0,0,0,0) 90%, rgba(0,0,0,0.2) 150%) #fff;
+  background: -webkit-radial-gradient(farthest-side, rgba(0,0,0,0) 90%, rgba(0,0,0,0.2) 150%) #fff;
+  background: -ms-radial-gradient(farthest-side, rgba(0,0,0,0) 90%, rgba(0,0,0,0.2) 150%) #fff;
+  background: -o-radial-gradient(farthest-side, rgba(0,0,0,0) 90%, rgba(0,0,0,0.2) 150%) #fff;
+  background: radial-gradient(farthest-side, rgba(0,0,0,0) 90%, rgba(0,0,0,0.2) 150%) #fff;
+  box-sizing: border-box;
+}
+h1 {
+  font-family: 'Open Sans', arial, sans-serif;
+  font-weight: normal;
+  font-size: 12pt;
+    text-decoration: underline;
+
+}
+
+a {
+  color: navy;
+}
+
+
+button {
+  display: inline-block;
+  background: -webkit-gradient(linear, 0% 40%, 0% 70%, from(#F9F9F9), to(#E3E3E3));
+  background: -webkit-linear-gradient(#F9F9F9 40%, #E3E3E3 70%);
+  background: -moz-linear-gradient(#F9F9F9 40%, #E3E3E3 70%);
+  background: -ms-linear-gradient(#F9F9F9 40%, #E3E3E3 70%);
+  background: -o-linear-gradient(#F9F9F9 40%, #E3E3E3 70%);
+  background: linear-gradient(#F9F9F9 40%, #E3E3E3 70%);
+  border: 1px solid #999;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  padding: 5px 8px;
+  outline: none;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  text-shadow: 1px 1px #fff;
+  font-weight: 700;
+  font-size: 10pt;
+}
+button:not(:disabled):hover,
+button:not(:disabled).active {
+  border-color: black;
+}
+button:not(:disabled):active,
+button:not(:disabled).active {
+  background: -webkit-gradient(linear, 0% 40%, 0% 70%, from(#E3E3E3), to(#F9F9F9));
+  background: -webkit-linear-gradient(#E3E3E3 40%, #F9F9F9 70%);
+  background: -moz-linear-gradient(#E3E3E3 40%, #F9F9F9 70%);
+  background: -ms-linear-gradient(#E3E3E3 40%, #F9F9F9 70%);
+  background: -o-linear-gradient(#E3E3E3 40%, #F9F9F9 70%);
+  background: linear-gradient(#E3E3E3 40%, #F9F9F9 70%);
+}
+
+
+
+.regular-checkbox {
+	-webkit-appearance: none;
+	background-color: #fafafa;
+	border: 1px solid #000000;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
+	top: 3px;
+	padding: 6px;
+	border-radius: 2px;
+	display: inline-block;
+	position: relative;
+}
+.regular-checkbox:active, .regular-checkbox:checked:active {
+	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);
+}
+
+.regular-checkbox:checked {
+	background-color: #7e66d6;
+	border: 1px solid #adb8c0;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05), inset 15px 10px -12px rgba(255,255,255,0.1);
+	color: #99a1a7;
+}
+
+.regular-checkbox:disabled {
+	background-color: #dddddd;
+}
+.regular-checkbox:checked:after {
+	content: '\2714';
+	font-size: 11px;
+	position: absolute;
+	top: -2px;
+	left: 2px;
+	color: #ffffff;
+}
+
+
+input[type="range"]{
+  -webkit-appearance: none !important;  
+  margin: -5px 0;	/*align with center line of buttons in FF*/
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  background-color: #555;
+  box-shadow: 0 -1px 1px rgba(255,255,255,0.5) inset;
+  border-radius: 10px;
+}
+
+input[type="range"]::-moz-range-track {
+  border: 0px;
+  background: #555;
+  height: 7px;
+  border-radius: 10px;
+  top: 45px;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 7px;
+  box-shadow: 1px 1px 5px rgba(0,0,0,1);
+  border-radius: 2px;
+  cursor: pointer;
+  border-top: 1px solid #fff;
+  background: #ccc -moz-linear-gradient(top, rgb(240, 240, 240), rgb(210, 210, 210));
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  width: 20px;
+  height: 8px;
+  box-shadow: 1px 1px 5px rgba(0,0,0,1);
+  cursor: pointer;
+  border-top: 1px solid #fff;
+  background: #ccc -webkit-linear-gradient(top, rgb(240, 240, 240), rgb(210, 210, 210));
+}
+h2 {
+  margin: 0;
+  font-weight: 300;
+}
+
+html, body {
+  height: 100%;
+
+  margin: 0;
+  padding: 0;
+}
+
+#pal {
+    float: right;
+	margin: 0;
+	padding: 0;
+}
+.tooltip
+{
+    float: right;
+	display: inline;
+	position: relative;
+	text-decoration: none;
+	top: 1px;
+	left: -50px;
+	padding: 5px 15px;
+	z-index: 101;
+
+}
+.tooltip:hover
+{
+    float: right;
+	display: inline;
+	position: relative;
+	text-decoration: none;
+	top: -11px;
+	left: -50px;
+	padding: 5px 15px;
+
+}
+.tooltip:hover:after
+{
+    float: right;
+	display: inline;
+	background: #333;
+	background: rgba(254,233,192,.9);
+	border: solid;
+	border-width: 1px;
+	border-radius: 5px;
+	top: 15px;
+	color: #000;
+	content: attr(alt);
+	left: -380px;
+	padding: 5px 15px;
+	position: absolute;
+	z-index: 102;
+	width: 350px;
+}
+.tooltip:hover:before
+{
+    float: right;
+	display: inline;
+	border: solid;
+	border-color: transparent black;
+	border-width: 6px 0px 6px 6px;
+	top: 20px;
+	content: "";
+	left: -100px;
+	position: relative;
+	z-index: 102;
+}
+
+label {
+  cursor: pointer;
+}
+
+
+/* modal crap needed to satisfy Google Chrome's "autoplay" bullshit */
+.modal-autoplay {
+    display: none;
+    position: fixed;
+    z-index: 101;
+    padding-top: 0px;
+    left: 0;
+    top: 0;
+    width:  100%;
+    height: 100%;
+    overflow: auto; 
+    background-color: rgb(0,0,0);
+    background-color: rgba(1,0,0,0.4); 
+}
+.modal-autoplay-content {
+    background-color: #d0d0d0;
+	margin: 10px;
+    padding: 10px;
+    border: 1px solid #000;
+    width: 500px;
+}
+
+
+.ui-spinner {
+	width: 1em;
+	height: 3em;
+	display: block;
+	position: relative;
+	overflow: hidden;
+	border: 1px solid #999;
+	padding: 0 1px;
+}
+
+.ui-spinner-disabled {
+	background: #F4F4F4;
+	color: #CCC;
+}
+
+.ui-spinner-box {
+	width: 100%;
+	height: 100%;
+	top: 1em;
+	text-align: center;
+	font-size: 90%;
+	border: none;
+	background: none;
+	padding: 0;
+	margin: 0;
+}
+
+.ui-spinner-up {
+	width: 100%;
+	height: 33%;
+	font-size: 0.5em;
+	padding: 0;
+	margin: 0;
+	text-align: top;
+	vertical-align: top;
+	position: absolute;
+	top: 0em;
+	left: 0em;
+	cursor: default;
+	border: 1px solid #999;
+	border-right: none;
+	border-top: none;
+}
+
+.ui-spinner-down {
+	width: 100%;
+	height: 33%;
+	font-size: 0.5em;
+	padding: 0;
+	margin: 0;
+	text-align: center;
+	vertical-align: middle;
+	position: absolute;
+	top: 4em;
+	left: 0em;
+	cursor: default;
+	border: 1px solid #999;
+	border-right: none;
+	border-top: none;
+}
+
+.ui-spinner-down {
+	bottom: 0;
+	border-bottom: 0;
+}
+
+.ui-spinner-pressed {
+	background: #FEFEFE;
+}
+
+.ui-spinner-list,
+.ui-spinner-listitem {
+	margin: 0;
+	padding: 0;
+}
+
+
+
+.bg {
+	position:absolute;
+	left:125px; 
+}
+.vRuler {
+  border-left: 1px solid #000;
+  height: 1em;
+  margin: 1em;
+}
+
+.a2 {
+	height: 3.2em;
+	float:left;
+	padding: 0 2px;
+	border-left: 1px solid #000;
+	margin: 1.2em;
+}
+
+.scope {
+	position:absolute;
+	left:450px;
+	top:45px;
+	border-style: solid; 
+
+	border-width: 2px; 
+	background-color:#fff;
+
+}
+.piano {
+	width: 425px;
+	height: 175px;
+}
+.hidden {
+  visibility: hidden;
+}
+
+.knobDiv {
+	width:50px;
+	height:50px;
+	background-color:#fff;
+	color:#FFF;
+}
+.envOut {
+	color:#FFF;
+	border: 1px solid #999;
+}
+.pwOut {
+	width:100px;
+	height:50px;
+	color:#FFF;
+	border: 1px solid #999;
+}
+.a1 {
+	float:left;
+	padding: 0 2px;
+
+}
+.a11 {
+	float:left;
+	padding: 0 2px;
+	overflow: visible;
+	width:50px;
+	overflow-wrap: normal;
+}
+.stringsTab, .soundboardTab, .musicBoxTab {
+	display: table;
+	border: 0px solid #999;
+
+	padding: 0px 10px;
+}
+
+.keys{
+	position:absolute;
+	top: 140px;
+	text-align: center;
+	display: table;
+	padding: 0px 4px;
+	pointer-events: none;
+}
+.k {
+	display:table-cell;
+	width: 30px;
+	pointer-events: none;
+}
+
+.row {
+	display:table;
+}
