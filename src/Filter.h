@@ -42,7 +42,8 @@ private:
 	int _delay;
 
 	float *_circularBuffer;
-	int _size;	// power of 2 to ease overflow handling
+	int _size;			// power of 2 to ease overflow handling
+	int _asize;			// allocated size
 	int _overflowMask;
 
 	int _readIdx;

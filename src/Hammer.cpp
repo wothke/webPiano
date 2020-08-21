@@ -13,6 +13,10 @@
 #include "NoteUtil.h"
 #include "Hammer.h"
 
+#define min(x,y) ( \
+    { __auto_type __x = (x); __auto_type __y = (y); \
+      __x < __y ? __x : __y; })
+
 
 float AbstractHammer::getHammerMass(float linPos) {
 	// https://www.speech.kth.se/music/5_lectures/conklin/thehammers.html#:~:text=The%20largest%20bass%20hammers%20may,this%20would%20increase%20manufacturing%20problems.
@@ -39,7 +43,7 @@ float AbstractHammer::getStiffnessExponent(float linPos) {
 
 float AbstractHammer::getStiffnessCoefficent(float linPos, float p) {
 	// hammer's stiffness coefficent	
-	return 6.0 / pow(0.00046, p);	// made up.. but sounds ok
+	return 6.0 / pow(0.00046, p);	// made up.. 
 }
 
 
@@ -116,7 +120,13 @@ float Hammer::runHammerModel(float vin) {
     _vh= _dAint->process(_ah);		// hammmer velocity
 	
 	// power-law for felt (see Eq. 2.1) 
-    float f= (dY>0.0) ? _k*pow(dY, _p) : 0.0;
+	
+	// XXX hack: the currently used stiffness coefficent may lead to 
+	// instable behavior, i.e. infinite force output .. which will 
+	// wreak havoc in the later output filters..
+	
+    float f= (dY>0.0) ? min(1000.0, _k*pow(dY, _p)) : 0.0;
+	
     return _delayFilter.process(f);
 }
 

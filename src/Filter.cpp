@@ -20,18 +20,17 @@ void saveDelete(float **buf) {
 		(*buf)= 0;
 	}
 }
-void assertBuffer(float **buf, int sOld, int sNew, bool doClear) {
-	if (sOld < sNew) {
-		if (sOld) {
+void assertBuffer(float **buf, int oldSize, int newSize, bool doClear) {
+	if (oldSize < newSize) {
+		if (oldSize) {
 			saveDelete(buf);
 		}
-		(*buf)= new float[sNew];		
+		(*buf)= new float[newSize];
 	}
 	if(doClear) {
-		memset((*buf), 0, sNew*sizeof(float));	// note: "new" may return uninitialized memory
+		memset((*buf), 0, newSize*sizeof(float));	// note: "new" may return uninitialized memory
 	}
 }
-
 
 // ------------------------ delay filter ----------------------------------
 
@@ -42,11 +41,18 @@ DelayFilter::~DelayFilter() {
 
 void DelayFilter::init(int delay) {
 	_delay= delay < 0 ? 0 : delay;
+	
 	if (_delay) {
-		int sOld= _size;
+		int oldSize= _asize;
+		
 		_size= next_pow2(_delay+1);
-		assertBuffer(&(_circularBuffer), sOld, _size, true);
+		assertBuffer(&(_circularBuffer), oldSize, _size, true);
 
+		if (_asize < _size) {
+			// avoid trashing buffers that are bigger than currently needed
+			_asize= _size;
+		}
+		
 		_writeIdx= 0;
 		_readIdx= (_size - _delay);	// just lag behind the writeIdx
 		_overflowMask= _size - 1;
@@ -192,13 +198,13 @@ float IIRFilter::process(float input) {
 // ---------- loss filter implementation -------------------
 
 LossFilter::LossFilter() : IIRFilter() {
-	IIRFilter::orderInit(1);
 }
 LossFilter::~LossFilter() {
 }
 
 void LossFilter::init(float freq, float c1, float c3) {
-	
+	IIRFilter::orderInit(1);	// clear buffers
+		
 	float g= 1.0 - c1/freq;			// see "c1= freq * (1 - g)"
 	
 	// solve quadratic equation (see "c3= -freq * (a1 / 2 * (a1+1)^2))"

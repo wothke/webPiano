@@ -126,7 +126,7 @@ SoundboardFilter::SoundboardFilter(float sampleRate) {
 		_delayFilter[i].init(DELAYS[i]);
 	}
 
-	setLowpassSettings(10000, 0.707);
+	setLowpassSettings(3000, 0.707);
 	setLossFilterSettings(0.95, 1.2);
 }
 
@@ -149,8 +149,7 @@ void SoundboardFilter::setLowpassSettings(float freq, float q) {
 void SoundboardFilter::init(float freq, int midiNote) {
 	if (midiNote>74)  {
 		// hack fixme: for some reason with higher frequencies
-		// something breaks down miserably (also see p and K 
-		// used in Hammer impl..) => investigate
+		// something breaks down miserably => investigate
 		freq= 587.329529;
 	}
 
@@ -163,7 +162,7 @@ void SoundboardFilter::init(float freq, int midiNote) {
 
 		_lossFilter[i].init(f0, c1, c3);
 	}
-//	memset(_out, 0, sizeof(float)*8 );
+	memset(_out, 0, sizeof(float)*8 );
 }
 
 void SoundboardFilter::initStaticParams() {
@@ -192,35 +191,38 @@ void SoundboardFilter::initStaticParams() {
 		// paper does not contain any clue with regard to the actually 
 		// used c - but the below seems to get the job done :-( 
 		
-		_c[i]= (i%2 == 1) ? e : -e;
+		_c[i]= (i & 0x1) ? e : -e;
 	}
 }
 
 float SoundboardFilter::process(float input) {
-	float in[8];
 	
 	for(int i= 0; i<8; i++) {
-		in[i]= input;
+		_in[i]= input;
 		
 		for(int j=0; j<8; j++) {
-			in[i]+= _A[i][j] * _out[j];
+			_in[i]+= _A[i][j] * _out[j];
 		}
 	}
 
-	float output= 0;  
+	float output= 0;
+
+	// note: the below filter will crash if fed by instable hammer
+	// output (i.e. when "input" explodes towards infinity..
+
 	for(int i= 0; i<8; i++) {
 		// "For the losses, one-pole filters were used in 
 		// series to the delay lines"
 		
-		_out[i]= _lossFilter[i].process( _delayFilter[i].process(in[i]) );
+		_out[i]= _lossFilter[i].process( _delayFilter[i].process(_in[i]) );
 		output+= _c[i] * _out[i];
 	}
-	
+
 	// Bank: "different filters should be used depending on the string.."
 	
 	// "For real-time applications, ... second or third order IIR shaping filters 
 	// are applied for all the different regions of the soundboard."
-	
+
 	output= _shapeFilter.process(output);
 	
 	return output;

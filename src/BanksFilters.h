@@ -77,6 +77,7 @@ private:
 	static float _A[8][8];	
 	static float _c[8];	// output coefficient vector
 
+	float _in[8];	// local var put here as an optimization
 	float _out[8];
 
 	// loss filters designed in a way suggested in [Jot and Chaigne 1991]

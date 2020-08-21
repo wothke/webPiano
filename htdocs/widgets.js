@@ -274,7 +274,6 @@ class WidgetStringTweaks extends WidgetBase {
 		if (this.changed) {
 			backend.setStringTweaks(this.stringLen, this.stringThickness, this.stringB, 
 									this.stringSumZ, this.stringDetune, this.stringPropagate );
-	console.log(this.stringPropagate);								
 			this.changed= false;
 		} 
 	}
