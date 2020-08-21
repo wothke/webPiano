@@ -102,12 +102,12 @@ extern "C" int32_t EMSCRIPTEN_KEEPALIVE computeAudioSamples() {
 	return _number_of_samples_rendered;
 }
 
-extern "C" void setBridgeTweaks(float g, float decay, float freq, float q, float bridgeZ) __attribute__((noinline));
-extern "C" void EMSCRIPTEN_KEEPALIVE setBridgeTweaks(float g, float decay, float freq, float q, float bridgeZ) {
+extern "C" void setBridgeTweaks(float volume, float g, float decay, float freq, float q, float bridgeZ) __attribute__((noinline));
+extern "C" void EMSCRIPTEN_KEEPALIVE setBridgeTweaks(float volume, float g, float decay, float freq, float q, float bridgeZ) {
 	if (piano[0] != NULL) {
-		piano[0]->setBridgeTweaks( g, decay, freq,  q, bridgeZ);
-		piano[1]->setBridgeTweaks( g, decay, freq,  q, bridgeZ);
-		piano[2]->setBridgeTweaks( g, decay, freq,  q, bridgeZ);
+		piano[0]->setBridgeTweaks(volume, g, decay, freq,  q, bridgeZ);
+		piano[1]->setBridgeTweaks(volume, g, decay, freq,  q, bridgeZ);
+		piano[2]->setBridgeTweaks(volume, g, decay, freq,  q, bridgeZ);
 	}
 }
 

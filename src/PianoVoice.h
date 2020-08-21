@@ -35,7 +35,7 @@ public:
 	
 	// for external tweaking
 	void setHammerTweaks(float zh, float vh);
-	void setBridgeTweaks(float g, float decay, float freq, float q, float bridgeZ);
+	void setBridgeTweaks(float volume, float g, float decay, float freq, float q, float bridgeZ);
 	void setStringTweaks(float len, float thickness, float b, float sumZ, float detune, bool propagate);
 
 private:

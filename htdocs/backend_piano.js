@@ -128,8 +128,8 @@ PianoBackendAdapter = (function(){ var $this = function (nextFrameCB) {
 		setHammerTweaks: function(zh, vh) {
 			this.Module.ccall('setHammerTweaks', 'number', ['number','number'], [zh, vh]);			
 		},
-		setBridgeTweaks: function(g, decay, freq, q, bridgeZ) {
-			this.Module.ccall('setBridgeTweaks', 'number', ['number','number','number','number','number'], [g, decay, freq, q, bridgeZ]);			
+		setBridgeTweaks: function(volume, g, decay, freq, q, bridgeZ) {
+			this.Module.ccall('setBridgeTweaks', 'number', ['number','number','number','number','number','number'], [volume,g, decay, freq, q, bridgeZ]);			
 		},
 		setStringTweaks: function(len, thickness, b, sumZ, detune, propagate) {
 			this.Module.ccall('setStringTweaks', 'number', ['number','number','number','number','number','number'], [len, thickness, b, sumZ, detune, propagate]);			

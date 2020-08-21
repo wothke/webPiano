@@ -272,8 +272,7 @@ class WidgetStringTweaks extends WidgetBase {
 	}
 	updateBackend(backend) {
 		if (this.changed) {
-			backend.setStringTweaks(this.stringLen, this.stringThickness, this.stringB, 
-									this.stringSumZ, this.stringDetune, this.stringPropagate );
+			backend.setStringTweaks(this.stringLen, this.stringThickness, this.stringB, 									this.stringSumZ, this.stringDetune, this.stringPropagate );
 			this.changed= false;
 		} 
 	}
@@ -319,13 +318,13 @@ class WidgetStringTweaks extends WidgetBase {
 			</div>\
 			<div class="a11">len\
 				<div class="knobDiv">\
-					<input class="stringLen" data-width="50" data-min="0.3" data-max="2.0" data-step=".02" data-cursor=true>\
+					<input class="stringLen" data-width="50" data-min="0.04" data-max="2.0" data-step=".02" data-cursor=true>\
 				</div>\
 			</div>\
 			<div class="a2">&nbsp;<span ></span></div>\
 			<div class="a11">&Oslash;\
 				<div class="knobDiv">\
-					<input class="stringThickness" data-width="50" data-min="0.5" data-max="2.0" data-step=".02" data-cursor=true>\
+					<input class="stringThickness" data-width="50" data-min="0.04" data-max="2.0" data-step=".02" data-cursor=true>\
 				</div>\
 			</div>\
 			<div class="a2">&nbsp;<span ></span></div>\
@@ -377,10 +376,12 @@ class WidgetSoundboardTreaks extends WidgetBase {
 		super();
 		this.idx= "0";
 		
-		this.lowpassFreq= 3000; 
+		this.volume= 5;
+		
+		this.lowpassFreq= 3000;
 		this.lowpassQ= 1.207;	// allow range 0.1 - 2.1
 		
-		this.lossG= 0.95; 
+		this.lossG= 0.95;
 		this.lossDecay= 1.2;
 
 		this.bridgeZ= 1.0;
@@ -392,7 +393,7 @@ class WidgetSoundboardTreaks extends WidgetBase {
 	}
 	updateBackend(backend) {
 		if (this.changed) {
-			backend.setBridgeTweaks(this.lossG, this.lossDecay, this.lowpassFreq, this.lowpassQ, this.bridgeZ);
+			backend.setBridgeTweaks(this.volume, this.lossG, this.lossDecay, this.lowpassFreq, this.lowpassQ, this.bridgeZ);
 			backend.setHammerTweaks(this.hammerZ, this.hammerV);
 			
 			this.changed= false;
@@ -440,10 +441,22 @@ class WidgetSoundboardTreaks extends WidgetBase {
 			this.changed= true;
 		}
 	}
+	processVolumeDial(v) {
+		if (v != this.volume) {
+			this.volume= v;
+			this.changed= true;
+		}
+	}
 	inject(divSelect) {
 		$(divSelect).html(
 			'<div class="a11" style="width:120px;"><b>soundboard</b>\
 			</div>\
+			<div class="a11">volume\
+				<div class="knobDiv">\
+					<input class="volume" data-width="50" data-min=0 data-max=10 data-step=".1" data-cursor=true>\
+				</div>\
+			</div>\
+			<div class="a2">&nbsp;<span ></span></div>\
 			<div class="a11">lowpass&nbsp;(freq/Q)\
 				<div class="knobDiv">\
 					<input class="lowpassFreq" data-width="50" data-min=1 data-max=5000 data-cursor=true>\
@@ -457,7 +470,7 @@ class WidgetSoundboardTreaks extends WidgetBase {
 			<div class="a2">&nbsp;<span ></span></div>\
 			<div class="a11">loss&nbsp;(G/decay)\
 				<div class="knobDiv">\
-					<input class="lossG" data-width="50" data-min="0.9" data-max="1.0" data-step=".01" data-cursor=true>\
+					<input class="lossG" data-width="50" data-min="0.95" data-max="1.0" data-step=".01" data-cursor=true>\
 				</div>\
 			</div>\
 			<div class="a11">&nbsp;\
@@ -488,6 +501,8 @@ class WidgetSoundboardTreaks extends WidgetBase {
 			</div>'
 		);
 
+		
+		this.setupKnob(".volume", this.volume, this.processVolumeDial.bind(this));
 		
 		this.setupKnob(".lowpassFreq", this.lowpassFreq, this.processFreqDial.bind(this));
 		this.setupKnob(".lowpassQ", this.lowpassQ, this.processQDial.bind(this));

@@ -24,6 +24,7 @@
 #include "PianoVoice.h"
 
 // params that can be manipulated from the outside
+static float sVolume=				5.0;
 static float sTweakBridgeZ=			1.0;
 static float sHammerZ=				0.0;	// impedance of hammer
 static float sTweakHammerV=			1.0;
@@ -368,7 +369,7 @@ long PianoVoice::renderOutput(float *buffer, int len) {
 				
 		sample= _soundboardFilter->process(sample);
 
-		buffer[i] = sample * 5.0;		// tuned for use of 3 voices..
+		buffer[i] = sample * sVolume;
 	}
 	return len;
 }
@@ -388,9 +389,10 @@ void PianoVoice::setHammerTweaks(float zh, float vh) {
 	sTweakHammerV= vh;
 }
 
-void PianoVoice::setBridgeTweaks(float g, float decay, float freq, float q, float bridgeZ) {
+void PianoVoice::setBridgeTweaks(float volume, float g, float decay, float freq, float q, float bridgeZ) {
 	_soundboardFilter->setLossFilterSettings(g, decay);
 	_soundboardFilter->setLowpassSettings(freq, q);
 
+	sVolume= volume;
 	sTweakBridgeZ= bridgeZ;
 }
