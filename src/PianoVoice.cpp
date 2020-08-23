@@ -294,7 +294,7 @@ int getNumberOfStringsUsed(int midiNote) {
 //#define TEST_EXTREMES
 
 #ifdef TEST_EXTREMES
-int toggle= 1;
+int toggle= 0;
 #endif
 
 void PianoVoice::strikeNote(int midiNote, float velocity) {

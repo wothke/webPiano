@@ -207,9 +207,18 @@ void LossFilter::init(float freq, float c1, float c3) {
 		
 	float g= 1.0 - c1/freq;			// see "c1= freq * (1 - g)"
 	
-	// solve quadratic equation (see "c3= -freq * (a1 / 2 * (a1+1)^2))"
-	float z= (4.0*c3 + freq) / (4.0*c3);
-	float a1= -z + sqrt(pow(z, 2.0) - 1.0);	
+	// see "c3= -freq * (a1 / (2 * (a1+1)^2))"
+
+	float p= 2.0 + (freq/(2.0*c3));		// solve using p, q formula for quadratic equations
+	const float q= 1.0;
+	
+	float sq= sqrt(pow(p/2, 2) -q);
+	float p2= -(p/2);
+	
+	float a1= p2 + sq;
+	
+	if (a1 > 0)
+		a1= p2 - sq; 
 	
 	_b[0]= g * (1.0 + a1);
 	_b[1]= 0;

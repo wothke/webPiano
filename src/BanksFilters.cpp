@@ -147,12 +147,6 @@ void SoundboardFilter::setLowpassSettings(float freq, float q) {
 }
 
 void SoundboardFilter::init(float freq, int midiNote) {
-	if (midiNote>74)  {
-		// hack fixme: for some reason with higher frequencies
-		// something breaks down miserably => investigate
-		freq= 587.329529;
-	}
-
 	for(int i=0; i<8; i++) {		
 		float f0=freq/DELAYS[i];
 

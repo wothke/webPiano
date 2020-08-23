@@ -42,8 +42,16 @@ float AbstractHammer::getStiffnessExponent(float linPos) {
 }
 
 float AbstractHammer::getStiffnessCoefficent(float linPos, float p) {
-	// hammer's stiffness coefficent	
-	return 6.0 / pow(0.00046, p);	// made up.. 
+	// hammer's stiffness coefficent
+
+	// see "Pysical modeling of the piano: An investigation into the effect of
+	// string stiffness of the hammer string interaction":
+	// K for C2/16 (4e08), C4/40 (4.5e09), C7/76 (1e12)
+
+	// for some reason impl fails miserably when using multiple orders of difference
+	// like the above data suggests.. the below is therefore just tuned by hand..
+	// it sounds about alright 
+	return 3E8 + 3E8 * linPos*4.0;	// use 5x higher K for highest notes
 }
 
 
@@ -121,11 +129,11 @@ float Hammer::runHammerModel(float vin) {
 	
 	// power-law for felt (see Eq. 2.1) 
 	
-	// XXX hack: the currently used stiffness coefficent may lead to 
+	// CAUTION: an "excessive" stiffness coefficent may lead to 
 	// instable behavior, i.e. infinite force output .. which will 
 	// wreak havoc in the later output filters..
 	
-    float f= (dY>0.0) ? min(1000.0, _k*pow(dY, _p)) : 0.0;
+	float f= (dY>0.0) ? min(1000.0, _k*pow(dY, _p)) : 0.0;	// hack: use min to avoid crashes
 	
     return _delayFilter.process(f);
 }
